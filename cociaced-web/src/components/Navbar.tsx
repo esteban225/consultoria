@@ -1,39 +1,59 @@
 import React, { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-// Lista de elementos de navegación con sus respectivos enlaces a las secciones (IDs del DOM)
+// Lista de elementos de navegación con sus respectivos enlaces o IDs del DOM
 const navLinks = [
-  { name: "Inicio", href: "#" },
-  { name: "Servicios", href: "#servicios" },
-  { name: "Proceso", href: "#proceso" },
-  { name: "Evaluación", href: "#evaluacion" },
-  { name: "Integridad científica", href: "#integridad" },
-  { name: "Preguntas frecuentes", href: "#faq" }
+  { name: "Inicio", href: "/", isRoute: true },
+  { name: "Servicios", href: "#servicios", isRoute: false },
+  { name: "Proceso", href: "#proceso", isRoute: false },
+  { name: "Evaluación", href: "#evaluacion", isRoute: false },
+  { name: "Integridad científica", href: "#integridad", isRoute: false },
+  { name: "Preguntas frecuentes", href: "#faq", isRoute: false }
 ];
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  // Función para cerrar el menú móvil al hacer clic en un enlace de navegación
-  const handleScrollToSection = () => {
+  // Función para manejar la navegación interna o redirección si estamos en otra página
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, item: { name: string; href: string; isRoute: boolean }) => {
     setIsOpen(false);
+
+    if (item.isRoute) {
+      e.preventDefault();
+      navigate(item.href);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (location.pathname !== '/') {
+      // Si estamos en otra página (ej. /politica-confidencialidad) y hacemos clic en una sección de la home
+      e.preventDefault();
+      navigate('/');
+      setTimeout(() => {
+        const element = document.querySelector(item.href);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    }
   };
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white backdrop-blur-md border-b border-[#a9b9c0]/40 transition-all duration-300">
       <nav className=" mx-auto px-6 lg:px-20 py-4 flex justify-between items-center">
         
-        {/* Logotipo adaptado para dispositivos móviles y escritorio */}
-        <div className="w-32 sm:w-56 cursor-pointer hover:opacity-80 transition-opacity flex items-center">
+        {/* Logotipo con redirección al inicio */}
+        <Link to="/" className="w-32 sm:w-56 cursor-pointer hover:opacity-80 transition-opacity flex items-center">
           <img src="./conedit.jpg" alt="Logo Consultoría Editorial" className="w-full h-auto object-contain" />
-        </div>
+        </Link>
 
-        {/* Menú de Escritorio (Oculto en móviles y tablets pequeñas) */}
+        {/* Menú de Escritorio */}
         <div className="hidden xl:flex items-center gap-6">
           {navLinks.map((item) => (
             <a 
               key={item.name} 
               href={item.href} 
-              className="group relative text-xs uppercase tracking-wider font-medium text-[#606e7c] transition-all duration-300 hover:text-[#1d334b]"
+              onClick={(e) => handleNavClick(e, item)}
+              className="group relative text-xs uppercase tracking-wider font-medium text-[#606e7c] transition-all duration-300 hover:text-[#1d334b] cursor-pointer"
             >
               {item.name}
               {/* Línea de acento inferior en verde científico (#4f8878) */}
@@ -41,16 +61,17 @@ const Navbar: React.FC = () => {
             </a>
           ))}
           
-          {/* Botón CTA de Escritorio con azul profundo (#1d334b) y hover en verde científico (#4f8878) */}
+          {/* Botón CTA de Escritorio */}
           <a 
             href="#evaluacion" 
+            onClick={(e) => handleNavClick(e, { name: "Evaluación", href: "#evaluacion", isRoute: false })}
             className="px-5 py-2.5 text-xs uppercase tracking-wider font-medium bg-[#1d334b] text-white rounded-xl hover:bg-[#4f8878] hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 shadow-sm ml-2"
           >
-            Contacto
+            Solicitar evaluación
           </a>
         </div>
 
-        {/* Botón de Hamburguesa para Móviles y pantallas medianas */}
+        {/* Botón de Hamburguesa para Móviles */}
         <button 
           onClick={() => setIsOpen(!isOpen)}
           className="xl:hidden p-2 text-[#606e7c] hover:text-[#1d334b] focus:outline-none transition-colors"
@@ -76,8 +97,8 @@ const Navbar: React.FC = () => {
             <a 
               key={item.name} 
               href={item.href} 
-              onClick={handleScrollToSection}
-              className="text-sm font-medium text-[#606e7c] hover:text-[#1d334b] uppercase tracking-wider transition-colors"
+              onClick={(e) => handleNavClick(e, item)}
+              className="text-sm font-medium text-[#606e7c] hover:text-[#1d334b] uppercase tracking-wider transition-colors cursor-pointer"
             >
               {item.name}
             </a>
@@ -86,7 +107,7 @@ const Navbar: React.FC = () => {
           {/* Botón CTA para Móviles */}
           <a 
             href="#evaluacion" 
-            onClick={handleScrollToSection}
+            onClick={(e) => handleNavClick(e, { name: "Evaluación", href: "#evaluacion", isRoute: false })}
             className="w-full text-center px-6 py-3 text-xs uppercase tracking-wider font-medium bg-[#1d334b] text-white rounded-xl hover:bg-[#4f8878] shadow-sm transition-all duration-300 mt-2"
           >
             Solicitar evaluación

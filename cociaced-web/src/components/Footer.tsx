@@ -1,6 +1,24 @@
 import React from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Footer: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Función para manejar el scroll a secciones internas si se encuentra en otra ruta
+  const handleSectionClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    if (location.pathname !== '/') {
+      e.preventDefault();
+      navigate('/');
+      setTimeout(() => {
+        const element = document.querySelector(targetId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    }
+  };
+
   return (
     <footer className="bg-[#1d334b] text-[#a9b9c0] border-t border-[#a9b9c0]/20 py-20 px-6 lg:px-20">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-16 items-start">
@@ -17,14 +35,22 @@ const Footer: React.FC = () => {
         {/* Columna 2: Enlaces legales, navegación y Copyright */}
         <div className="md:col-span-5 flex flex-col md:items-end space-y-6">
           <div className="flex flex-wrap gap-6 text-sm text-[#a9b9c0]">
-            <a href="/politica-confidencialidad" className="hover:text-white transition-colors duration-300">
+            {/* Enlace interno de React Router para la página de confidencialidad */}
+            <Link to="/politica-confidencialidad" className="hover:text-white transition-colors duration-300">
               Confidencialidad
-            </a>
-            <a href="#integridad" className="hover:text-white transition-colors duration-300">
+            </Link>
+            
+            {/* Enlace con manejo inteligente de ruta para ir a la sección #integridad */}
+            <a 
+              href="#integridad" 
+              onClick={(e) => handleSectionClick(e, '#integridad')} 
+              className="hover:text-white transition-colors duration-300"
+            >
               Integridad Científica
             </a>
+
             <a href="mailto:contacto@ejemplo.com" className="hover:text-white transition-colors duration-300">
-              Contacto
+              Solicitar evaluación
             </a>
           </div>
           

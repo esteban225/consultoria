@@ -57,30 +57,6 @@ const HeroSection: React.FC = () => {
         </div>
       </section>
 
-      {/* MENSAJE DE CONFIANZA */}
-      <section className="py-24 px-6 lg:px-20 bg-[#a9b9c0]/10 relative border-b border-[#a9b9c0]/30">
-        <div className="max-w-3xl mx-auto text-center">
-          
-          <h2 className="text-2xl lg:text-3xl font-serif text-[#1d334b] mb-6 tracking-tight">
-            Cada investigación requiere una estrategia editorial diferente
-          </h2>
-          
-          <p className="text-[#606e7c] leading-relaxed mb-10 font-light text-base lg:text-lg">
-            La selección de una revista adecuada, la preparación del manuscrito y la gestión de las 
-            observaciones de los evaluadores pueden ser determinantes dentro del proceso de publicación. 
-            Por ello, cada proyecto es evaluado individualmente antes de definir el alcance del acompañamiento.
-          </p>
-          
-          <a 
-            href="#evaluacion" 
-            className="inline-flex items-center gap-2 text-[#1d334b] font-medium pb-1 border-b-2 border-[#4f8878] hover:opacity-75 transition-opacity group text-sm"
-          >
-            <span>Solicitar evaluación inicial</span>
-            <span className="transform group-hover:translate-x-1 transition-transform duration-300 text-[#4f8878]">→</span>
-          </a>
-          
-        </div>
-      </section>
     </>
   );
 };
